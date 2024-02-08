@@ -1,29 +1,57 @@
 #!/usr/bin/python3
 
 import sys
+import math
+import random
 
 
-def is_prime(number):
-    if number < 2:
-        return False
-    for i in range(2, int(number ** 0.5) + 1):
-        if number % i == 0:
-            return False
-    return True
+def gcd(a, b):
+    while b:
+        a, b = b, a % b
+    return a
 
 
-def find_prime_factors(number):
-    for i in range(2, int(number ** 0.5) + 1):
-        if number % i == 0 and is_prime(i) and is_prime(number // i):
-            return i, number // i
+def pollards_rho(n):
+    if n % 2 == 0:
+        return 2
+
+    x = random.randint(1, n - 1)
+    y = x
+    c = random.randint(1, n - 1)
+    d = 1
+
+    def f(x):
+        return (x * x + c) % n
+
+    while d == 1:
+        x = f(x)
+        y = f(f(y))
+        d = gcd(abs(x - y), n)
+
+    return d
+
+
+def find_prime_factors(n):
+    if n <= 1:
+        return []
+
+    factors = []
+
+    while n > 1:
+        factor = pollards_rho(n)
+        factors.append(factor)
+        n //= factor
+
+    return factors
 
 
 def main(filename):
     with open(filename, 'r') as file:
-        number = int(file.readline().strip())
+        n = int(file.read().strip())
 
-    p, q = find_prime_factors(number)
-    print(f"{number}={p}*{q}")
+    factors = find_prime_factors(n)
+    p, q = factors[0], factors[1]
+    print(f"{n}={p}*{q}")
 
 
 if __name__ == "__main__":
