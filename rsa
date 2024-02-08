@@ -1,18 +1,35 @@
 #!/usr/bin/python3
-from sys import argv
 
-with open(argv[1]) as f:
-    for lie in f:
-    num = int(line)
-    print("{:d}=".format(num), end='')
-    if num % 2 == 0:
-        print("{}*2".format(num/2))
-        continue
-    for i in range(3, num, 2):
-        if num % i = 0;
-            factor = num//i
-            for i in range(3, factor, 2):
-                if factor % j == 0 or j == 0:
-                    break
-                print("{}*{}".format(factor, i))
-                break
+import sys
+
+
+def is_prime(num):
+    if num < 2:
+        return False
+    for i in range(2, int(num**0.5) + 1):
+        if num % i == 0:
+            return False
+    return True
+
+
+def find_prime_factors(number):
+    for i in range(2, int(number**0.5) + 1):
+        if number % i == 0 and is_prime(i) and is_prime(number // i):
+            return f"{number}={i}*{number//i}"
+    return f"{number} is not an RSA number"
+
+
+def main(filename):
+    with open(filename, 'r') as file:
+        rsa_number = int(file.read().strip())
+
+    factorization = find_prime_factors(rsa_number)
+    print(factorization)
+
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print("Usage: ./rsa_factors <file>")
+        sys.exit(1)
+
+    main(sys.argv[1])
