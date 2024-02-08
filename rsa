@@ -1,15 +1,20 @@
 #!/usr/bin/python3
 
 import sys
-from sympy import isprime
+import sympy
 
-def factorize_rsa_number(n):
-    for p in range(2, int(n**0.5) + 1):
-        if n % p == 0:
-            q = n // p
-            if isprime(p) and isprime(q):
-                return p, q
-    return None, None
+def find_prime_factors(n):
+    """
+    Finds the prime factors of a given number n.
+    
+    Args:
+    - n: The number to factorize
+    
+    Returns:
+    - p, q: The prime factors of n
+    """
+    p, q = sympy.factorint(n)
+    return p, q
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
@@ -17,8 +22,5 @@ if __name__ == "__main__":
         sys.exit(1)
     
     n = int(sys.argv[1])
-    p, q = factorize_rsa_number(n)
-    if p is None or q is None:
-        print("Unable to find prime factors for the given RSA number.")
-    else:
-        print("Prime factors of", n, "are:", p, "and", q)
+    p, q = find_prime_factors(n)
+    print(f"The prime factors of {n} are: {p} and {q}")
