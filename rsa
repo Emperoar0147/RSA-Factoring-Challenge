@@ -1,41 +1,18 @@
 #!/usr/bin/python3
+from sys import argv
 
-import sys
-
-
-def is_prime(num):
-    if num <= 1:
-        return False
-    if num <= 3:
-        return True
-    if num % 2 == 0 or num % 3 == 0:
-        return False
-    i = 5
-    while i * i <= num:
-        if num % i == 0 or num % (i + 2) == 0:
-            return False
-        i += 6
-    return True
-
-
-def factorize_rsa(number):
-    for i in range(2, int(number**0.5) + 1):
-        if number % i == 0 and is_prime(i) and is_prime(number // i):
-            return f"{number}={i}*{number//i}"
-    return "No prime factors found"
-
-
-def main(filename):
-    with open(filename, 'r') as file:
-        rsa_number = int(file.read().strip())
-
-    factorization = factorize_rsa(rsa_number)
-    print(factorization)
-
-
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: ./factors_rsa <file>")
-        sys.exit(1)
-
-    main(sys.argv[1])
+with open(argv[1]) as f:
+    for lie in f:
+    num = int(line)
+    print("{:d}=".format(num), end='')
+    if num % 2 == 0:
+        print("{}*2".format(num/2))
+        continue
+    for i in range(3, num, 2):
+        if num % i = 0;
+            factor = num//i
+            for i in range(3, factor, 2):
+                if factor % j == 0 or j == 0:
+                    break
+                print("{}*{}".format(factor, i))
+                break
