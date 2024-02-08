@@ -1,30 +1,36 @@
 #!/usr/bin/python3
 
 import sys
+import math
 
 
 def is_prime(num):
-    if num < 2:
+    if num <= 1:
         return False
-    for i in range(2, int(num**0.5) + 1):
-        if num % i == 0:
+    if num <= 3:
+        return True
+    if num % 2 == 0 or num % 3 == 0:
+        return False
+    i = 5
+    while i * i <= num:
+        if num % i == 0 or num % (i + 2) == 0:
             return False
+        i += 6
     return True
 
 
-def find_prime_factors(number):
-    for i in range(2, int(number**0.5) + 1):
-        if number % i == 0 and is_prime(i) and is_prime(number // i):
-            return f"{number}={i}*{number//i}"
-    return f"{number} is not an RSA number"
+def factorize_rsa(n):
+    for i in range(2, int(math.sqrt(n)) + 1):
+        if n % i == 0 and is_prime(i) and is_prime(n // i):
+            return i, n // i
 
 
 def main(filename):
     with open(filename, 'r') as file:
-        rsa_number = int(file.read().strip())
+        n = int(file.readline().strip())
 
-    factorization = find_prime_factors(rsa_number)
-    print(factorization)
+    p, q = factorize_rsa(n)
+    print(f"{n}={p}*{q}")
 
 
 if __name__ == "__main__":
