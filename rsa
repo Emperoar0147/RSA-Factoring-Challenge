@@ -1,47 +1,24 @@
 #!/usr/bin/python3
 
-import math
+import sys
+from sympy import isprime
 
-def is_prime(num):
-    if num <= 1:
-        return False
-    if num <= 3:
-        return True
-    if num % 2 == 0 or num % 3 == 0:
-        return False
-    i = 5
-    while i * i <= num:
-        if num % i == 0 or num % (i + 2) == 0:
-            return False
-        i += 6
-    return True
-
-def prime_factors(n):
-    factors = []
-    # Remove factors of 2
-    while n % 2 == 0:
-        factors.append(2)
-        n //= 2
-    # n must be odd at this point, so a skip of 2 (i = i + 2) can be used
-    for i in range(3, int(math.sqrt(n)) + 1, 2):
-        while n % i == 0:
-            factors.append(i)
-            n //= i
-    # If n is a prime greater than 2
-    if n > 2:
-        factors.append(n)
-    return factors
-
-def main():
-    n = int(input().strip())  # Read RSA number from input
-    if is_prime(n):
-        print("The number is prime.")
-    else:
-        factors = prime_factors(n)
-        if len(factors) == 2:
-            print("Prime factors are:", factors[0], "and", factors[1])
-        else:
-            print("Error: The number does not have exactly 2 prime factors.")
+def factorize_rsa_number(n):
+    for p in range(2, int(n**0.5) + 1):
+        if n % p == 0:
+            q = n // p
+            if isprime(p) and isprime(q):
+                return p, q
+    return None, None
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) != 2:
+        print("Usage: python script.py <RSA_number>")
+        sys.exit(1)
+    
+    n = int(sys.argv[1])
+    p, q = factorize_rsa_number(n)
+    if p is None or q is None:
+        print("Unable to find prime factors for the given RSA number.")
+    else:
+        print("Prime factors of", n, "are:", p, "and", q)
