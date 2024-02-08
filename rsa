@@ -1,56 +1,40 @@
 #!/usr/bin/python3
 
 import sys
-import math
-import random
 
 
-def gcd(a, b):
-    while b:
-        a, b = b, a % b
-    return a
-
-
-def pollard_rho(n):
-    if n % 2 == 0:
-        return 2
-
-    x = random.randint(1, n-1)
-    y = x
-    c = random.randint(1, n-1)
-    d = 1
-
-    f = lambda x: (x*x + c) % n
-    while d == 1:
-        x = f(x)
-        y = f(f(y))
-        d = gcd(abs(x-y), n)
-
-    return d
+def is_prime(number):
+    if number <= 1:
+        return False
+    if number <= 3:
+        return True
+    if number % 2 == 0 or number % 3 == 0:
+        return False
+    i = 5
+    while i * i <= number:
+        if number % i == 0 or number % (i + 2) == 0:
+            return False
+        i += 6
+    return True
 
 
 def find_prime_factors(number):
-    factors = []
-
-    while number > 1:
-        factor = pollard_rho(number)
-        factors.append(factor)
-        number //= factor
-
-    return factors
+    for i in range(2, int(number**0.5) + 1):
+        if number % i == 0:
+            if is_prime(i) and is_prime(number // i):
+                return i, number // i
+    return None, None
 
 
 def main(filename):
     with open(filename, 'r') as file:
         number = int(file.read().strip())
 
-    factors = find_prime_factors(number)
-    
-    if len(factors) == 2:
-        p, q = factors
+    p, q = find_prime_factors(number)
+    if p and q:
         print(f"{number}={p}*{q}")
     else:
-        print(f"Unable to factorize {number} within the time limit.")
+        print(f"Unable to find prime factors for {number}")
 
 
 if __name__ == "__main__":
