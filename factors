@@ -2,28 +2,23 @@
 
 import sys
 
-def factorize(n):
-    factors = []
-    for i in range(2, n//2 + 1):
-        if n % i == 0:
-            factors.append((i, n // i))
-    return factors
+def factorize(number):
+    for i in range(2, int(number**0.5) + 1):
+        if number % i == 0:
+            return f"{number}={i}*{number//i}"
+    return f"{number} is a prime number"
 
-def main():
-    if len(sys.argv) != 2:
-        print("Usage: factors <file>")
-        sys.exit(1)
-    
-    input_file = sys.argv[1]
+def main(filename):
+    with open(filename, 'r') as file:
+        numbers = file.read().splitlines()
 
-    with open(input_file, 'r') as file:
-        numbers = file.readlines()
-
-    for num in numbers:
-        num = int(num)
-        factor_pairs = factorize(num)
-        for pair in factor_pairs:
-            print(f"{num}={pair[0]}*{pair[1]}")
+    for number in numbers:
+        factorization = factorize(int(number))
+        print(factorization)
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) != 2:
+        print("Usage: ./factors <file>")
+        sys.exit(1)
+
+    main(sys.argv[1])
