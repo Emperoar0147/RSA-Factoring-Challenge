@@ -11,47 +11,46 @@ def gcd(a, b):
     return a
 
 
-def pollards_rho(n):
+def pollard_rho(n):
     if n % 2 == 0:
         return 2
 
-    x = random.randint(1, n - 1)
+    x = random.randint(1, n-1)
     y = x
-    c = random.randint(1, n - 1)
+    c = random.randint(1, n-1)
     d = 1
 
-    def f(x):
-        return (x * x + c) % n
-
+    f = lambda x: (x*x + c) % n
     while d == 1:
         x = f(x)
         y = f(f(y))
-        d = gcd(abs(x - y), n)
+        d = gcd(abs(x-y), n)
 
     return d
 
 
-def find_prime_factors(n):
-    if n <= 1:
-        return []
-
+def find_prime_factors(number):
     factors = []
 
-    while n > 1:
-        factor = pollards_rho(n)
+    while number > 1:
+        factor = pollard_rho(number)
         factors.append(factor)
-        n //= factor
+        number //= factor
 
     return factors
 
 
 def main(filename):
     with open(filename, 'r') as file:
-        n = int(file.read().strip())
+        number = int(file.read().strip())
 
-    factors = find_prime_factors(n)
-    p, q = factors[0], factors[1]
-    print(f"{n}={p}*{q}")
+    factors = find_prime_factors(number)
+    
+    if len(factors) == 2:
+        p, q = factors
+        print(f"{number}={p}*{q}")
+    else:
+        print(f"Unable to factorize {number} within the time limit.")
 
 
 if __name__ == "__main__":
